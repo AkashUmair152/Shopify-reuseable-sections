@@ -1,6 +1,124 @@
+<!-- ========== ASSIGN ========== -->
+{% assign product_title = product.title %}
+<p>The product title is: {{ product_title }}</p>
+
+<!-- ========== CAPTURE ========== -->
+{% capture welcome_message %}
+  Welcome to our Shopify store!
+{% endcapture %}
+<p>{{ welcome_message }}</p>
+
+<!-- ========== CASE / WHEN ========== -->
+{% assign customer_type = 'vip' %}
+{% case customer_type %}
+  {% when 'new' %}
+    <p>Welcome new customer!</p>
+  {% when 'vip' %}
+    <p>Welcome VIP customer!</p>
+  {% else %}
+    <p>Welcome back!</p>
+{% endcase %}
+
+<!-- ========== COMMENT ========== -->
+{% comment %}
+  This is a comment. It won't be shown in the frontend.
+{% endcomment %}
+
+<!-- ========== CYCLE ========== -->
+{% for product in collection.products %}
+  <div class="{% cycle 'red', 'blue', 'green' %}">
+    {{ product.title }}
+  </div>
+{% endfor %}
+
+<!-- ========== ECHO ========== -->
+{% echo product.title %}
+
+<!-- ========== FOR LOOP ========== -->
+{% for product in collection.products %}
+  <h2>{{ product.title }}</h2>
+{% endfor %}
+
+<!-- ========== IF / ELSIF / ELSE ========== -->
+{% if product.available %}
+  <p>In Stock!</p>
+{% elsif product.variants.size > 0 %}
+  <p>Multiple options available!</p>
+{% else %}
+  <p>Sold Out!</p>
+{% endif %}
+
+<!-- ========== INCLUDE (Deprecated) ========== -->
+{% comment %}
+  Deprecated method, use render instead.
+{% endcomment %}
+{% include 'product-card' %}
+
+<!-- ========== LAYOUT ========== -->
+{% layout 'product' %}
+
+<!-- ========== PAGINATE ========== -->
+{% paginate collection.products by 5 %}
+  {% for product in collection.products %}
+    <h2>{{ product.title }}</h2>
+  {% endfor %}
+  <div class="pagination">
+    {% if paginate.previous %}
+      <a href="{{ paginate.previous.url }}">Previous</a>
+    {% endif %}
+    {% if paginate.next %}
+      <a href="{{ paginate.next.url }}">Next</a>
+    {% endif %}
+  </div>
+{% endpaginate %}
+
+<!-- ========== RAW ========== -->
+{% raw %}
+  {{ This will not be processed by Liquid }}
+{% endraw %}
+
+<!-- ========== RENDER ========== -->
+{% render 'product-card', product: product %}
+
+<!-- ========== SECTION ========== -->
+{% section 'featured-products' %}
+
+<!-- ========== STYLE (for sections) ========== -->
+{% style %}
+  .featured-product {
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+{% endstyle %}
+
+<!-- ========== JAVASCRIPT (for sections) ========== -->
+{% javascript %}
+  console.log('Hello from a Shopify section!');
+{% endjavascript %}
+
+<!-- ========== SCHEMA (for sections) ========== -->
 {% schema %}
-{ 
-    "name": "fisrt section",
-    "settings": []
-    "blocks":[]"
+{
+  "name": "Featured Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Featured Products"
+    }
+  ]
 }
+{% endschema %}
+
+<!-- ========== TABLEROW ========== -->
+<table>
+  {% tablerow product in collection.products cols: 3 %}
+    {{ product.title }}
+  {% endtablerow %}
+</table>
+
+<!-- ========== UNLESS ========== -->
+{% unless product.available %}
+  <p>Sorry, this product is sold out.</p>
+{% endunless %}
